@@ -1,6 +1,6 @@
 {
   "name": "ftlabs-screens-viewer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Connects to a screens server with websockets and fires events on url change.",
   "main": "build/index.js",
   "scripts": {
@@ -13,8 +13,12 @@
     "babel-preset-es2015": "^6.1.18"
   },
   "babel": {
-    "presets": ["es2015"],
-    "plugins": ["transform-es2015-modules-commonjs"]
+    "presets": [
+      "es2015"
+    ],
+    "plugins": [
+      "transform-es2015-modules-commonjs"
+    ]
   },
   "author": "",
   "license": "ISC"
