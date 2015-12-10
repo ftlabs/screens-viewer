@@ -1,20 +1,22 @@
-# screens-viewer
+# Screens-Viewer
 
 Connects to a screens server with websockets and fires events on url change.
 
 ## Example Usage
 
 ```
-	// Create new viewer, give the url of the api which should be connected to.
-	const viewer = new Viewer('https://ftlabs-screens.herokuapp.com');
+const Viewer = require('ftlabs-screens-viewer');
 
-  // The url has changed
-	viewer.on('change', updateFrameURL);
+// Create new viewer, give the url of the api which should be connected to.
+const viewer = new Viewer('https://ftlabs-screens.herokuapp.com');
 
-  // A reload has been forced
-	viewer.on('reload', reloadFrame);
+// The url has changed
+viewer.on('change', updateFrameURL);
 
-  // E.g. The viewer has started but cannot connected to the server.
-	viewer.on('not-connected', showOfflineMessage);
+// A reload has been forced
+viewer.on('reload', reloadFrame);
+
+// E.g. The viewer has started but cannot connected to the server.
+viewer.on('not-connected', showOfflineMessage);
 
 ```
