@@ -5,7 +5,7 @@
   "scripts": {
     "build": "babel ./lib/ -d ./build/",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "git diff --quiet HEAD && PKG_VERSION=`npm version --no-git-tag-version ${1-'patch'} | cut -c 2-`; cd build/; npm version --no-git-tag-version $PKG_VERSION; cd -; git commit -am v$PKG_VERSION; git-directory-deploy --directory build --branch production; git checkout production; git tag v$PKG_VERSION; git push --tags; git checkout -"
+    "deploy": "npm run build; git diff --quiet HEAD && PKG_VERSION=`npm version --no-git-tag-version ${1-'patch'} | cut -c 2-`; cd build/; npm version --no-git-tag-version $PKG_VERSION; cd -; git commit -am v$PKG_VERSION; git-directory-deploy --directory build --branch production; git checkout production; git tag v$PKG_VERSION; git push --tags; git checkout -"
   },
   "devDependencies": {
     "babel-cli": "^6.2.0",
