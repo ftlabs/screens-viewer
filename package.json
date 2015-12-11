@@ -2,15 +2,16 @@
   "name": "ftlabs-screens-viewer",
   "version": "1.0.1",
   "description": "Connects to a screens server with websockets and fires events on url change.",
-  "main": "build/index.js",
   "scripts": {
     "build": "babel ./lib/ -d ./build/",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "git-directory-deploy --directory build --branch production"
   },
   "devDependencies": {
     "babel-cli": "^6.2.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.2.0",
-    "babel-preset-es2015": "^6.1.18"
+    "babel-preset-es2015": "^6.1.18",
+    "git-directory-deploy": "^1.3.0"
   },
   "babel": {
     "presets": [
