@@ -92,9 +92,9 @@ function Viewer(host) {
 		// Only update if the old url and new url are different
 		if (!Object.is(newUrl, url)) {
 			removeActiveFlag();
+			url = newUrl;
 			if (newUrl) {
 				_this.data.items[nextItemIndex].active = true;
-				url = newUrl;
 				_this.emit('change', url);
 			} else {
 				if (_this.ready()) {
