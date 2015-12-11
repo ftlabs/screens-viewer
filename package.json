@@ -1,6 +1,6 @@
 {
   "name": "ftlabs-screens-viewer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Connects to a screens server with websockets and fires events on url change.",
   "scripts": {
     "build": "babel ./lib/ -d ./build/",
