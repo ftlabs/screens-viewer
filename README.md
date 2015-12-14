@@ -2,6 +2,7 @@
 
 Connects to a screens server with websockets and fires events on url change.
 
+
 ## Example Usage
 
 ``` js
@@ -20,3 +21,7 @@ viewer.on('reload', reloadFrame);
 viewer.on('not-connected', showOfflineMessage);
 
 ```
+
+# Developing
+
+Dependencies go into `build/package.json` so they get installed from production.
