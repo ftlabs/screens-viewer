@@ -2,6 +2,7 @@
 /* global io */
 
 ;
+require("babel-polyfill");
 var moment = require('moment');
 var EventEmitter = require('events');
 var util = require('util');
@@ -32,7 +33,7 @@ function Viewer(host) {
 	});
 
 	socket.on('update', function (data) {
-		console.log('Received update', data.items.length, data);
+		console.log('Received update', data);
 		_this.update(data);
 	});
 
@@ -54,8 +55,6 @@ function Viewer(host) {
 			socket.emit('heartbeat');
 		}, 3000);
 	});
-
-	this.on('change', this.syncUp);
 
 	console.log('Initialising socket.io...');
 
@@ -103,11 +102,12 @@ function Viewer(host) {
 					_this.emit('not-connected');
 				}
 			}
+			_this.syncUp();
 		}
 	};
 
 	this.connectionState = false;
-	this.data = JSON.parse(localStorage.getItem(LSKEY) || '{"item":[]}');
+	this.data = JSON.parse(localStorage.getItem(LSKEY) || '{"items":[]}');
 
 	// Every second, check whether the URL needs to be changed
 	setInterval(poll.bind(this), 1000);
