@@ -25,3 +25,8 @@ viewer.on('not-connected', showOfflineMessage);
 # Developing
 
 Dependencies go into `build/package.json` so they get installed from production.
+
+Commands:
+
+`npm run build` - Builds
+`npm run test` - Runs tests 
