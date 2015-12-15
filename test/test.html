@@ -7,13 +7,14 @@
 	<body>
 		<div id="mocha"></div>
         <script src="http://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/chai/3.4.1/chai.min.js"></script>
         <script src="http://cdn.socket.io/socket.io-1.3.7.js"></script>
         <script>
             /*global mocha*/
             mocha.setup('bdd');
         </script>
         <script src=".tmp/client.js"></script>
-		<script src="tests/viewer.js"></script>
+        <script src="tests/viewer.js"></script>
 		<script>
             /*global mocha*/
 			mocha.run();
