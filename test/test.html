@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<!-- encoding must be set for mocha's special characters to render properly -->
+        <link href="http://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div id="mocha"></div>
+        <script src="http://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
+        <script src="http://cdn.socket.io/socket.io-1.3.7.js"></script>
+        <script>
+            /*global mocha*/
+            mocha.setup('bdd');
+        </script>
+        <script src=".tmp/client.js"></script>
+		<script src="tests/viewer.js"></script>
+		<script>
+            /*global mocha*/
+			mocha.run();
+		</script>
+	</body>
+</html>
