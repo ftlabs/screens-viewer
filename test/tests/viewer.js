@@ -17,9 +17,39 @@ var mockAPIs = {
 		id: 12345,
 		name: 'Dummy Test Viewer',
 		items: [
-			{url: 'https://google.com'}
+			{url: 'https://ada.is'}
 		]
-	}
+	},
+	updateUrlExpires: {
+		_action: 'update',
+		id: 12345,
+		name: 'Dummy Test Viewer',
+		items: [
+			{
+				url: 'https://ft.com',
+				expires: 0 // will be filled in later
+			}
+		]
+	},
+	updateUrlSchedule: {
+		_action: 'update',
+		id: 12345,
+		name: 'Dummy Test Viewer',
+		items: [
+			{
+				url: 'https://google.com',
+				dateTimeSchedule: 0 // will be filled in later
+			}
+		]
+	},
+	updateUrlDuplicate: {
+		_action: 'update',
+		id: 12345,
+		name: 'Dummy Test Viewer',
+		items: [
+			{url: 'https://twitter.com'}
+		]
+	},
 };
 
 function mockAPI(action) {
@@ -68,19 +98,15 @@ describe('API', function () {
 	it('Should update when the url list is updated', function (done) {
 		mockAPI('updateUrl');
 		viewer.once('change', function (url) {
-			expect(url).to.equal('https://google.com');
+			expect(url).to.equal('https://ada.is');
 			done();
 		});
 	});
 
 	it('Should change the urls which expire.', function (done) {
-
-		// it needs a smidge more time
-		this.timeout(2500);
-
-		mockAPIs.updateUrl.items[0].expires = Date.now() + 1000;
-		mockAPIs.updateUrl.items[0].url = 'https://ft.com';
-		mockAPI('updateUrl');
+		this.timeout(3000);
+		mockAPIs.updateUrlExpires.items[0].expires = Date.now() + 1000;
+		mockAPI('updateUrlExpires');
 		viewer.once('change', function (url) {
 			expect(url).to.equal('https://ft.com');
 			viewer.once('change', function (url) {
@@ -93,6 +119,22 @@ describe('API', function () {
 				done();
 			});
 		});
+	});
+
+	it('Should not refresh the page if the url did not change', function (done) {
+		viewer.once('change', function () {
+			throw Error('change was fired even though url did not change.');
+		});
+		viewer.socket.once('update', function () {
+
+			mockAPI('updateUrlDuplicate');
+			viewer.socket.once('update', function () {
+
+				// Make sure no change has happened after an update has been recieved.
+				setTimeout(done, 200);
+			});
+		});
+		mockAPI('updateUrlDuplicate');
 	});
 
 	it('Should show scheduled pages at the correct time.', function (done) {
@@ -108,31 +150,16 @@ describe('API', function () {
 		scheduleTime.setMilliseconds(0);
 		scheduleTime = scheduleTime.getTime() + 60000;
 
-		delete mockAPIs.updateUrl.items[0].expires;
-		mockAPIs.updateUrl.items[0].dateTimeSchedule = scheduleTime;
-		mockAPIs.updateUrl.items[0].url = 'https://google.com';
 		viewer.once('change', function (url) {
 			expect(url).to.equal('https://google.com');
-			if (Date.now() > mockAPIs.updateUrl.items[0].dateTimeSchedule) {
+			if (Date.now() > mockAPIs.updateUrlSchedule.items[0].dateTimeSchedule) {
 				done();
 			} else {
 				throw Error('Updated too soon.');
 			}
 		});
-		mockAPI('updateUrl');
-	});
-
-	it('Should not refresh the page if the url did not change', function (done) {
-		delete mockAPIs.updateUrl.items[0].dateTimeSchedule;
-		viewer.once('change', function () {
-			throw Error('change was fired even though url did not change.');
-		});
-		viewer.socket.on('update', function () {
-
-			// Make sure no change has happened after an update has been recieved.
-			setTimeout(done, 200);
-		});
-		mockAPI('updateUrl');
-		done();
+		
+		mockAPIs.updateUrlSchedule.items[0].dateTimeSchedule = scheduleTime;
+		mockAPI('updateUrlSchedule');
 	});
 });
