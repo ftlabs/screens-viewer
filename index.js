@@ -1,7 +1,6 @@
-'use strict'
+'use strict';
 /* global io */
 
-;
 require("babel-polyfill");
 var moment = require('moment');
 var EventEmitter = require('events');
