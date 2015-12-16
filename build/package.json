@@ -6,6 +6,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "babel-polyfill": "^6.3.14",
     "moment": "^2.10.6"
   }
 }
