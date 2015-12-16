@@ -1,6 +1,7 @@
-'use strict';
+'use strict'
 /* global io */
 
+;
 require("babel-polyfill");
 var moment = require('moment');
 var EventEmitter = require('events');
@@ -42,6 +43,22 @@ function Viewer(host) {
 
 	socket.on('connect', function () {
 		return _this.connectionState = true;
+	});
+
+	socket.on('reassign', function (data) {
+
+		console.log("Reassign", data);
+
+		var currentData = this.getData();
+
+		if (currentData.id === data.id && currentData.idUpdated === data.idUpdated) {
+
+			var newData = Object.assign({}, currentData);
+			newData.id = data.newID;
+
+			this.update(newData);
+			this.syncUp();
+		}
 	});
 
 	socket.on('disconnect', function () {
@@ -116,6 +133,24 @@ util.inherits(Viewer, EventEmitter);
 module.exports = Viewer;
 
 Viewer.prototype.update = function update(newdata) {
+
+	var olddata = this.getData();
+
+	// If ID of this screen has changed, update the UI
+	if (newdata.id && newdata.id !== olddata.id) {
+		newdata.idUpdated = Date.now();
+		this.emit('id-change');
+
+		// if it is currently displaying the default url update the id
+		if (!this.getUrl()) {
+			this.emit('change', this.getDefaultUrl());
+		}
+	}
+
+	if (!olddata.idUpdated && !newdata.idUpdated) {
+		newdata.idUpdated = Date.now();
+	}
+
 	this.data = newdata;
 
 	if (!('items' in this.data)) {
