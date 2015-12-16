@@ -74,6 +74,10 @@ describe('API', function () {
 	});
 
 	it('Should change the urls which expire.', function (done) {
+
+		// it needs a smidge more time
+		this.timeout(2500);
+
 		mockAPIs.updateUrl.items[0].expires = Date.now() + 1000;
 		mockAPIs.updateUrl.items[0].url = 'https://ft.com';
 		mockAPI('updateUrl');
