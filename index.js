@@ -2,7 +2,6 @@
 /* global io */
 
 ;
-require("babel-polyfill");
 var moment = require('moment');
 var EventEmitter = require('events');
 var util = require('util');
@@ -49,15 +48,15 @@ function Viewer(host) {
 
 		console.log("Reassign", data);
 
-		var currentData = this.getData();
+		var currentData = _this.getData();
 
 		if (currentData.id === data.id && currentData.idUpdated === data.idUpdated) {
 
 			var newData = Object.assign({}, currentData);
 			newData.id = data.newID;
 
-			this.update(newData);
-			this.syncUp();
+			_this.update(newData);
+			_this.syncUp();
 		}
 	});
 
@@ -96,20 +95,25 @@ function Viewer(host) {
 			dirty = true;
 		}
 
-		var nextItemIndex;
-		var nextItem = _this.data.items.find(function (item, index) {
-			nextItemIndex = index;
-			return moment(item.dateTimeSchedule, 'x').isBefore(date) || moment(item.dateTimeSchedule, 'x').isSame(date);
-		});
+		var nextItem = (function () {
+
+			for (var i = 0, l = _this.data.items.length; i < l; i++) {
+				var item = _this.data.items[i];
+
+				if (moment(item.dateTimeSchedule, 'x').isBefore(date) || moment(item.dateTimeSchedule, 'x').isSame(date)) {
+					return item;
+				}
+			}
+		})();
 
 		var newUrl = nextItem ? nextItem.url : undefined;
 
 		// Only update if the old url and new url are different
-		if (!Object.is(newUrl, url)) {
+		if (newUrl !== url) {
 			removeActiveFlag();
 			url = newUrl;
 			if (newUrl) {
-				_this.data.items[nextItemIndex].active = true;
+				nextItem.active = true;
 				_this.emit('change', url);
 			} else {
 				if (_this.ready()) {
