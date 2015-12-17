@@ -1,4 +1,5 @@
-# Screens-Viewer
+# Screens-Viewer 
+[![Circle CI](https://circleci.com/gh/ftlabs/screens-viewer.svg?style=svg)](https://circleci.com/gh/ftlabs/screens-viewer)
 
 Connects to a screens server with websockets and fires events on url change.
 
