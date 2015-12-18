@@ -31,9 +31,14 @@ var mockAPIs = {
 			}
 		]
 	},
+	assignId: {
+		_action: 'reassign',
+		newID: 12346,
+		id: 12345
+	},
 	updateUrlSchedule: {
 		_action: 'update',
-		id: 12345,
+		id: 12346,
 		name: 'Dummy Test Viewer',
 		items: [
 			{
@@ -44,12 +49,12 @@ var mockAPIs = {
 	},
 	updateUrlDuplicate: {
 		_action: 'update',
-		id: 12345,
+		id: 12346,
 		name: 'Dummy Test Viewer',
 		items: [
 			{url: 'https://twitter.com'}
 		]
-	},
+	}
 };
 
 function mockAPI(action) {
@@ -58,14 +63,21 @@ function mockAPI(action) {
 
 describe('Connect to the server via io', function(){
 
-	it('Should connect via sockets on /screens', function(done){
+	localStorage.setItem('viewerData_v2', JSON.stringify(mockAPIs.updateId));
+	viewer = new Viewer('http://localhost:3000');
 
-		viewer = new Viewer('http://localhost:3000');
+	it('Should connect via sockets on /screens', function(done){
 		viewer.socket.on('connect', function () {
 			expect(viewer.connectionState).to.be.true;
 			expect(viewer.data).to.not.be.undefined;
 			done();
 		});
+	});
+
+	it('Should set the saved data correctly', function(done){
+		expect(viewer.getData('name')).to.equal('Dummy Test Viewer');
+		expect(viewer.getData('id')).to.equal(12345);
+		done();
 	});
 });
 
@@ -83,7 +95,7 @@ describe('API', function () {
 		mockAPI('reload');
 	});
 
-	it('Should not update when only id updated', function (done) {
+	it('Should not update when nothing updated', function (done) {
 		function err() { throw Error('Should not change, no items added.') }
 		viewer.once('change', err);
 		mockAPI('updateId');
@@ -119,6 +131,17 @@ describe('API', function () {
 				done();
 			});
 		});
+	});
+
+	it('Should be able to have id reassigned.', function (done) {
+
+		viewer.once('id-change', function () {
+			expect(viewer.getData('id')).to.equal(12346);
+			done();
+		});
+		
+		mockAPIs.assignId.idUpdated = viewer.getData('idUpdated');
+		mockAPI('assignId');
 	});
 
 	it('Should not refresh the page if the url did not change', function (done) {
