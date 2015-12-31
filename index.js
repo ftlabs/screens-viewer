@@ -81,8 +81,7 @@ function Viewer(host) {
 	};
 
 	var poll = function poll() {
-		var count = _this.data.items.length;
-		var dirty = false;
+
 		var date = new Date();
 		date.setSeconds(0);
 		date.setMilliseconds(0);
@@ -90,10 +89,6 @@ function Viewer(host) {
 		_this.data.items = _this.data.items.filter(function (item) {
 			return !item.expires || new Date(item.expires) > new Date();
 		});
-
-		if (_this.data.items < count) {
-			dirty = true;
-		}
 
 		var nextItem = (function () {
 
@@ -112,7 +107,6 @@ function Viewer(host) {
 		if (newUrl !== url) {
 			removeActiveFlag();
 			url = newUrl;
-			dirty = true;
 			if (newUrl) {
 				nextItem.active = true;
 				_this.emit('change', url);
@@ -123,9 +117,6 @@ function Viewer(host) {
 					_this.emit('not-connected');
 				}
 			}
-		}
-
-		if (dirty) {
 			_this.syncUp();
 		}
 	};
