@@ -1,5 +1,5 @@
 'use strict'
-/* global io */
+/* global io, localStorage */
 
 ;
 var moment = require('moment');
@@ -32,7 +32,7 @@ function Viewer(host) {
 	});
 
 	socket.on('update', function (data) {
-		console.log('Received update', data);
+		console.log('Received update: ' + JSON.stringify(data, null, '  '));
 		_this.update(data);
 	});
 
@@ -46,7 +46,7 @@ function Viewer(host) {
 
 	socket.on('reassign', function (data) {
 
-		console.log("Reassign", data);
+		console.log('Reassign: ' + JSON.stringify(data, null, '  '));
 
 		var currentData = _this.getData();
 
@@ -112,6 +112,7 @@ function Viewer(host) {
 		if (newUrl !== url) {
 			removeActiveFlag();
 			url = newUrl;
+			dirty = true;
 			if (newUrl) {
 				nextItem.active = true;
 				_this.emit('change', url);
@@ -122,6 +123,9 @@ function Viewer(host) {
 					_this.emit('not-connected');
 				}
 			}
+		}
+
+		if (dirty) {
 			_this.syncUp();
 		}
 	};
@@ -136,13 +140,20 @@ util.inherits(Viewer, EventEmitter);
 
 module.exports = Viewer;
 
-Viewer.prototype.update = function update(newdata) {
+Viewer.prototype.update = function update(newData) {
 
-	var olddata = this.getData();
+	var oldData = this.getData();
+
+	if (!oldData.idUpdated && !newData.idUpdated) {
+		newData.idUpdated = Date.now();
+		this.syncUp();
+	}
+
+	this.data = newData;
 
 	// If ID of this screen has changed, update the UI
-	if (newdata.id && newdata.id !== olddata.id) {
-		newdata.idUpdated = Date.now();
+	if (newData.id && newData.id !== oldData.id) {
+		newData.idUpdated = Date.now();
 		this.emit('id-change');
 
 		// if it is currently displaying the default url update the id
@@ -150,12 +161,6 @@ Viewer.prototype.update = function update(newdata) {
 			this.emit('change', this.getDefaultUrl());
 		}
 	}
-
-	if (!olddata.idUpdated && !newdata.idUpdated) {
-		newdata.idUpdated = Date.now();
-	}
-
-	this.data = newdata;
 
 	if (!('items' in this.data)) {
 		this.data = this.data.items = [];
@@ -174,7 +179,7 @@ Viewer.prototype.getData = function getData(key) {
 
 Viewer.prototype.syncUp = function syncUp() {
 	var storedData = this.getData();
-	console.log('Sending update', storedData.items.length, storedData);
+	console.log('Syncing Up, ' + storedData.items.length + ' items: ' + JSON.stringify(storedData, null, '  '));
 	this.socket.emit('update', storedData);
 };
 
