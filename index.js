@@ -135,12 +135,12 @@ Viewer.prototype.update = function update(newData) {
 
 	var oldData = this.getData();
 
+	this.data = newData;
+
 	if (!oldData.idUpdated && !newData.idUpdated) {
 		newData.idUpdated = Date.now();
 		this.syncUp();
 	}
-
-	this.data = newData;
 
 	// If ID of this screen has changed, update the UI
 	if (newData.id && newData.id !== oldData.id) {
