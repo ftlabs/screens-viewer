@@ -27,5 +27,8 @@
     ]
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "array.prototype.find": "^2.0.0"
+  }
 }
