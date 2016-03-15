@@ -1,7 +1,6 @@
-'use strict'
+'use strict';
 /* global io, localStorage */
 
-;
 var moment = require('moment');
 var EventEmitter = require('events');
 var util = require('util');
@@ -14,7 +13,7 @@ function Viewer(host) {
 	EventEmitter.call(this);
 
 	var socket = io.connect(host + '/screens');
-	var url = undefined;
+	var url = void 0;
 
 	// Returns the default url for generators, returns null if offline
 	this.getDefaultUrl = function getDefaultUrl() {
@@ -86,11 +85,13 @@ function Viewer(host) {
 		date.setSeconds(0);
 		date.setMilliseconds(0);
 
+		var amountOfItems = _this.data.items.length;
+
 		_this.data.items = _this.data.items.filter(function (item) {
 			return !item.expires || new Date(item.expires) > new Date();
 		});
 
-		var nextItem = (function () {
+		var nextItem = function () {
 
 			for (var i = 0, l = _this.data.items.length; i < l; i++) {
 				var item = _this.data.items[i];
@@ -99,7 +100,7 @@ function Viewer(host) {
 					return item;
 				}
 			}
-		})();
+		}();
 
 		var newUrl = nextItem ? nextItem.url : undefined;
 
@@ -117,6 +118,9 @@ function Viewer(host) {
 					_this.emit('not-connected');
 				}
 			}
+		}
+
+		if (amountOfItems !== _this.data.items.length) {
 			_this.syncUp();
 		}
 	};
