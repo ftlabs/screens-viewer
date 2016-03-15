@@ -4,6 +4,7 @@
 var moment = require('moment');
 var EventEmitter = require('events');
 var util = require('util');
+require('array.prototype.find').shim();
 
 var LSKEY = 'viewerData_v2';
 
@@ -91,16 +92,9 @@ function Viewer(host) {
 			return !item.expires || new Date(item.expires) > new Date();
 		});
 
-		var nextItem = function () {
-
-			for (var i = 0, l = _this.data.items.length; i < l; i++) {
-				var item = _this.data.items[i];
-
-				if (moment(item.dateTimeSchedule, 'x').isBefore(date) || moment(item.dateTimeSchedule, 'x').isSame(date)) {
-					return item;
-				}
-			}
-		}();
+		var nextItem = _this.data.items.find(function (item) {
+			return moment(item.dateTimeSchedule, 'x').isBefore(date) || moment(item.dateTimeSchedule, 'x').isSame(date);
+		});
 
 		var newUrl = nextItem ? nextItem.url : undefined;
 
