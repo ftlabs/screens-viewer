@@ -139,7 +139,7 @@ describe('API', function () {
 			expect(viewer.getData('id')).to.equal(12346);
 			done();
 		});
-		
+
 		mockAPIs.assignId.idUpdated = viewer.getData('idUpdated');
 		mockAPI('assignId');
 	});
@@ -181,7 +181,7 @@ describe('API', function () {
 				throw Error('Updated too soon.');
 			}
 		});
-		
+
 		mockAPIs.updateUrlSchedule.items[0].dateTimeSchedule = scheduleTime;
 		mockAPI('updateUrlSchedule');
 	});
