@@ -2,11 +2,12 @@
   "name": "ftlabs-screens-viewer",
   "version": "2.1.1",
   "description": "Connects to a screens server with websockets and fires events on url change.",
-  "main": "./lib/index.js",
+  "main": "./build/index.js",
   "scripts": {
     "build": "babel ./lib/ -d ./build/",
     "build-test": "mkdir -p test/.tmp; browserify ./build/ -o ./test/.tmp/client.js -s Viewer",
-    "test": "npm run build; npm run build-test; node ./test/server.js & sleep 1; mocha-phantomjs http://localhost:3000/test.html; kill $!; echo Killed $!;"
+    "test": "npm run build; npm run build-test; node ./test/server.js & sleep 1; mocha-phantomjs http://localhost:3000/test.html; kill $!; echo Killed $!;",
+    "prepublish": "npm run build"
   },
   "devDependencies": {
     "babel-cli": "^6.2.0",
