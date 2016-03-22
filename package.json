@@ -20,14 +20,6 @@
     "mocha-phantomjs": "^4.0.1",
     "socket.io": "^1.3.7"
   },
-  "babel": {
-    "presets": [
-      "es2015"
-    ],
-    "plugins": [
-      "transform-es2015-modules-commonjs"
-    ]
-  },
   "author": "",
   "license": "ISC",
   "dependencies": {
