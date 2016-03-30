@@ -2,7 +2,7 @@
 	<head>
 		<meta charset="utf-8">
         <link href="http://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet" />
-        <script src="http://cdn.polyfill.io/v2/polyfill.js?features=es6"></script>
+        <script src="http://cdn.polyfill.io/v2/polyfill.js?features=default,es6"></script>
         <script src="http://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/chai/3.4.1/chai.js"></script>
         <script src="http://cdn.socket.io/socket.io-1.3.7.js"></script>
@@ -10,15 +10,23 @@
 	<body>
 		<div id="mocha"></div>
         <script>
+            console.log('here');
             /*global mocha*/
             if (window.initMochaPhantomJS) window.initMochaPhantomJS();
+            console.log('here');
             mocha.setup('bdd');
+            console.log('here');
         </script>
         <script src=".tmp/client.js"></script>
+        <script>
+            console.log('here');
+        </script>
         <script src="tests/viewer.js"></script>
 		<script>
             /*global mocha*/
+            console.log('here');
 			mocha.run();
+            console.log('here');
 		</script>
 	</body>
 </html>
