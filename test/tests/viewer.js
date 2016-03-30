@@ -64,7 +64,14 @@ function mockAPI(action) {
 describe('Connect to the server via io', function(){
 
 	localStorage.setItem('viewerData_v2', JSON.stringify(mockAPIs.updateId));
-	viewer = new Viewer('http://localhost:3000');
+	viewer = new Viewer('http://localhost:3000', localStorage);
+
+	it('Should get ready', function (done) {
+		viewer.on('ready', function () {
+			done();
+		});
+		viewer.start();
+	});
 
 	it('Should connect via sockets on /screens', function(done){
 		viewer.socket.on('connect', function () {
@@ -145,6 +152,7 @@ describe('API', function () {
 	});
 
 	it('Should not refresh the page if the url did not change', function (done) {
+		this.timeout(3000);
 		viewer.once('change', function () {
 			throw Error('change was fired even though url did not change.');
 		});
