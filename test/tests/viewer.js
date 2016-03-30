@@ -1,5 +1,7 @@
 'use strict';
+/* eslint-env browser:true es6:false */
 /* global Viewer, describe, it, chai, afterEach */
+
 var expect = chai.expect;
 var viewer;
 var mockAPIs = {
@@ -61,10 +63,29 @@ function mockAPI(action) {
 	viewer.socket.emit('echo', mockAPIs[action]);
 }
 
+function asyncStorage(storage, forceSync) {
+
+	// detect whether sync or async.
+	var sync = forceSync === undefined ? storage === localStorage : forceSync;
+	if (sync) {
+		 return {
+			  getItem: function (name, callback) {
+				   callback(storage.getItem(name));
+			  },
+			  setItem: function (name, value, callback) {
+				   storage.setItem(name, value);
+				   callback(value);
+			  }
+		 };
+	}
+	return storage;
+}
+
+
 describe('Connect to the server via io', function(){
 
 	localStorage.setItem('viewerData_v2', JSON.stringify(mockAPIs.updateId));
-	viewer = new Viewer('http://localhost:3000', localStorage);
+	viewer = new Viewer('http://localhost:3000', asyncStorage(localStorage));
 
 	it('Should get ready', function (done) {
 		viewer.on('ready', function () {
@@ -75,7 +96,7 @@ describe('Connect to the server via io', function(){
 
 	it('Should connect via sockets on /screens', function(done){
 		viewer.socket.on('connect', function () {
-			expect(viewer.connectionState).to.be.true;
+			expect(viewer.connectionState).to.equal(true);
 			expect(viewer.data).to.not.be.undefined;
 			done();
 		});
@@ -98,12 +119,12 @@ describe('API', function () {
 	});
 
 	it('Should reload when recieves reload', function (done) {
-		viewer.once('reload', function() { done() });
+		viewer.once('reload', function() { done(); });
 		mockAPI('reload');
 	});
 
 	it('Should not update when nothing updated', function (done) {
-		function err() { throw Error('Should not change, no items added.') }
+		function err() { throw Error('Should not change, no items added.'); }
 		viewer.once('change', err);
 		mockAPI('updateId');
 		viewer.socket.once('update', function () {
