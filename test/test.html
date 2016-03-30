@@ -10,23 +10,15 @@
 	<body>
 		<div id="mocha"></div>
         <script>
-            console.log('here');
             /*global mocha*/
             if (window.initMochaPhantomJS) window.initMochaPhantomJS();
-            console.log('here');
             mocha.setup('bdd');
-            console.log('here');
         </script>
         <script src=".tmp/client.js"></script>
-        <script>
-            console.log('here');
-        </script>
         <script src="tests/viewer.js"></script>
 		<script>
             /*global mocha*/
-            console.log('here');
 			mocha.run();
-            console.log('here');
 		</script>
 	</body>
 </html>
